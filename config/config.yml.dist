@@ -1,0 +1,6 @@
+server:
+    socket: /var/run/focalism/server.sock
+    confirmation: XXXXXXXX
+
+log:
+    prod: false
