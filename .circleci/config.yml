@@ -30,3 +30,5 @@ jobs:
           fingerprints:
             - "54:9f:45:cc:b5:df:02:e7:42:8f:24:7f:64:4b:9c:03"
       - run: scp -o "StrictHostKeyChecking no" ./focalism focalism@${server_name}:/tmp
+      - run: ssh -o "StrictHostKeyChecking no" focalism@${server_name} "sudo /etc/init.d/supervisor stop server.focalism && mv /tmp/focalism ~/bin/ && sudo /etc/init.d/supervisor start server.focalism"
+      - run: ssh -o "StrictHostKeyChecking no" focalism@${server_name} "sudo /etc/init.d/nginx reload"
