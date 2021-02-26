@@ -26,3 +26,7 @@ jobs:
       - checkout
       - run: make dependencies
       - run: make build
+      - add_ssh_keys:
+          fingerprints:
+            - "54:9f:45:cc:b5:df:02:e7:42:8f:24:7f:64:4b:9c:03"
+      - run: scp -o "StrictHostKeyChecking no" ./focalism focalism@${server_name}:/tmp
