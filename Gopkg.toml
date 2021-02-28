@@ -12,4 +12,4 @@
 
 [[constraint]]
   name = "github.com/sepuka/vkbotserver"
-  branch = "mailrueasyjson"
+  version = "v0.0.3"
