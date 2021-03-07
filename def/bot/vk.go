@@ -3,12 +3,14 @@ package bot
 import (
 	"github.com/sarulabs/di"
 	"github.com/sepuka/focalism/def"
+	"github.com/sepuka/focalism/def/log"
 	messageDef "github.com/sepuka/focalism/def/message"
 	"github.com/sepuka/focalism/def/middleware"
 	"github.com/sepuka/focalism/internal/config"
 	"github.com/sepuka/vkbotserver/message"
 	middleware2 "github.com/sepuka/vkbotserver/middleware"
 	"github.com/sepuka/vkbotserver/server"
+	"go.uber.org/zap"
 )
 
 const (
@@ -22,9 +24,10 @@ func init() {
 				var (
 					handlerMap = container.Get(messageDef.HandlerMapDef).(message.HandlerMap)
 					handler    = container.Get(middleware.BotMiddlewareDef).(middleware2.HandlerFunc)
+					logger     = container.Get(log.LoggerDef).(*zap.SugaredLogger)
 				)
 
-				return server.NewSocketServer(cfg.Server, handlerMap, handler), nil
+				return server.NewSocketServer(cfg.Server, handlerMap, handler, logger), nil
 			},
 			Close:    nil,
 			Name:     Bot,

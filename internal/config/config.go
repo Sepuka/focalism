@@ -10,9 +10,18 @@ type (
 		Prod bool
 	}
 
+	Database struct {
+		User     string
+		Password string
+		Name     string
+		Host     string
+		Port     int
+	}
+
 	Config struct {
 		Server config.Config
-		Log Log
+		Log    Log
+		Db     Database
 	}
 )
 

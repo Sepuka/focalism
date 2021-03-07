@@ -3,6 +3,9 @@ PROGRAM_NAME=focalism
 init:
 	dep ensure -v
 
+update:
+	dep ensure -update
+
 build:
 	go build -o $(PROGRAM_NAME)
 
