@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	errors2 "github.com/sepuka/focalism/errors"
 	"github.com/sepuka/focalism/internal/domain"
 	button2 "github.com/sepuka/focalism/internal/message/button"
@@ -46,7 +47,7 @@ func (h *Answer) Handle(req *domain2.Request) error {
 		answer = `Wrong answer`
 	}
 
-	keyboard.Buttons = button2.NextWithReturn(lastTask.GetId())
+	keyboard.Buttons = button2.NextWithReturn(fmt.Sprintf(`%d`, lastTask.Vocabulary.TopicId))
 
 	return h.api.SendMessageWithButton(int(peerId), answer, keyboard)
 }

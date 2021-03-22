@@ -15,6 +15,8 @@ type (
 		Answer     string `sql:"answer"`
 		Example    string `sql:"example"`
 		Question   string `sql:"question"`
+		TopicId    int64  `sql:"topic_id"`
+		Topic      *Topic `pg:"rel:belongs-to"`
 	}
 )
 
