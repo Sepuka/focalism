@@ -12,8 +12,7 @@
 
 [[constraint]]
   name = "github.com/sepuka/vkbotserver"
-  #version = "v0.0.5"
-  branch = "main"
+  version = "v0.0.6"
 
 [[constraint]]
   name = "go.uber.org/zap"
