@@ -20,7 +20,7 @@ type (
 		Datetime     time.Time   `sql:"datetime"`
 		Time         int64       `sql:"time"`
 		Vocabulary   *Vocabulary `pg:"rel:belongs-to"`
-		IsCorrect    bool        `sql:"result"`
+		IsCorrect    bool        `sql:"is_correct"`
 	}
 )
 
