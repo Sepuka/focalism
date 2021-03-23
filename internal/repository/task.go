@@ -86,11 +86,14 @@ func (v *TaskRepository) Answer(task domain.Task) error {
 		err error
 	)
 
-	task.Time = time.Now().Sub(task.Datetime)
+	task.Time = int64(time.Now().Sub(task.Datetime).Seconds())
 
-	err = v.
+	_, err = v.
 		db.
-		Update(task)
+		Model(&task).
+		Column(`time`).
+		WherePK().
+		Update()
 
 	return err
 }

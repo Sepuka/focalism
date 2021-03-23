@@ -53,6 +53,7 @@ func (h *Answer) Handle(req *domain2.Request) error {
 			With(
 				zap.Int64(`peerId`, peerId),
 				zap.Int64(`taskId`, lastTask.Id),
+				zap.Error(err),
 			).
 			Error(`answer time update failed`)
 	}

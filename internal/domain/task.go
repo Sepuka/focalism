@@ -14,12 +14,12 @@ type (
 	}
 
 	Task struct {
-		Id           int64         `sql:"task_id,pk"`
-		VocabularyId int64         `sql:"vocabulary_id"`
-		PeerId       int64         `sql:"peer_id"`
-		Datetime     time.Time     `sql:"datetime"`
-		Time         time.Duration `sql:"time"`
-		Vocabulary   *Vocabulary   `pg:"rel:belongs-to"`
+		Id           int64       `sql:"task_id,pk"`
+		VocabularyId int64       `sql:"vocabulary_id"`
+		PeerId       int64       `sql:"peer_id"`
+		Datetime     time.Time   `sql:"datetime"`
+		Time         int64       `sql:"time"`
+		Vocabulary   *Vocabulary `pg:"rel:belongs-to"`
 	}
 )
 
