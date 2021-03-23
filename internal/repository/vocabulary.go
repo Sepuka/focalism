@@ -15,15 +15,15 @@ func NewVocabularyRepository(db *pg.DB) domain.VocabularyRepository {
 	return &VocabularyRepository{db: db}
 }
 
-func (v *VocabularyRepository) FindActual(topicId int64) (*domain.Vocabulary, error) {
+func (v *VocabularyRepository) FindActual(topicId int64) (domain.Vocabulary, error) {
 	var (
 		err        error
-		vocabulary = &domain.Vocabulary{}
+		vocabulary = domain.Vocabulary{}
 	)
 
 	err = v.
 		db.
-		Model(vocabulary).
+		Model(&vocabulary).
 		Where(`topic_id = ?`, topicId).
 		Order(`views ASC`).
 		Limit(1).
@@ -32,10 +32,10 @@ func (v *VocabularyRepository) FindActual(topicId int64) (*domain.Vocabulary, er
 	return vocabulary, err
 }
 
-func (v *VocabularyRepository) IncrViews(vocabulary *domain.Vocabulary) {
+func (v *VocabularyRepository) IncrViews(vocabulary domain.Vocabulary) {
 	_, _ = v.
 		db.
-		Model(vocabulary).
+		Model(&vocabulary).
 		Set(`views = views + 1`).
 		WherePK().
 		Update()

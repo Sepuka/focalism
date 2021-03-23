@@ -18,15 +18,18 @@ const (
 	TopicsLabel         button.Text = `темы`
 )
 
-func Next(payload button.Payload) [][]button.Button {
+func Surrender(taskId string) [][]button.Button {
 	return [][]button.Button{
 		{
 			{
 				Color: button.PrimaryColor,
 				Action: button.Action{
-					Type:    TextButtonType,
-					Label:   NextLabel,
-					Payload: payload.String(),
+					Type:  TextButtonType,
+					Label: NextLabel,
+					Payload: button.Payload{
+						Command: ButtonIdSurrender,
+						Id:      taskId,
+					}.String(),
 				},
 			},
 		},

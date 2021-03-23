@@ -17,7 +17,7 @@ func NewTaskRepository(db *pg.DB) domain.TaskRepository {
 	return &TaskRepository{db: db}
 }
 
-func (v *TaskRepository) Create(vocabulary *domain.Vocabulary, peerId int64) (*domain.Task, error) {
+func (v *TaskRepository) Create(vocabulary domain.Vocabulary, peerId int64) (*domain.Task, error) {
 	var (
 		err  error
 		task = &domain.Task{
@@ -96,4 +96,19 @@ func (v *TaskRepository) Answer(task domain.Task) error {
 		Update()
 
 	return err
+}
+
+func (v *TaskRepository) GetTodayTasks(peerId int) (int, error) {
+	var (
+		err error
+		cnt int
+	)
+
+	cnt, err = v.
+		db.
+		Model(&domain.Task{}).
+		Where(`peer_id = ? AND DATE(datetime) = ?`, peerId, time.Now().Format(`2006-01-02`)).
+		Count()
+
+	return cnt, err
 }

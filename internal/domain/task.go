@@ -7,10 +7,11 @@ import (
 
 type (
 	TaskRepository interface {
-		Create(vocabulary *Vocabulary, peerId int64) (*Task, error)
+		Create(vocabulary Vocabulary, peerId int64) (*Task, error)
 		GetById(taskId int64) (*Task, error)
 		GetLast() (Task, error)
 		Answer(task Task) error
+		GetTodayTasks(peerId int) (int, error)
 	}
 
 	Task struct {

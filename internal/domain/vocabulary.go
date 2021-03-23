@@ -4,8 +4,8 @@ import "strconv"
 
 type (
 	VocabularyRepository interface {
-		FindActual(topicId int64) (*Vocabulary, error)
-		IncrViews(*Vocabulary)
+		FindActual(topicId int64) (Vocabulary, error)
+		IncrViews(Vocabulary)
 	}
 
 	Vocabulary struct {
