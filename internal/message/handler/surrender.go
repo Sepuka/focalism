@@ -36,9 +36,6 @@ func (h *surrenderHandler) Handle(req *domain.Request, payload *button.Payload) 
 		peerId   = int(req.Object.Message.FromId)
 		keyboard = button.Keyboard{
 			OneTime: true,
-			Buttons: button2.Next(button.Payload{
-				Command: button2.ButtonIdNext,
-			}),
 		}
 		msg string
 	)
@@ -52,6 +49,8 @@ func (h *surrenderHandler) Handle(req *domain.Request, payload *button.Payload) 
 	}
 
 	msg = fmt.Sprintf(`The correct answer is "%s"`, task.Vocabulary.Answer)
+
+	keyboard.Buttons = button2.NextWithReturn(fmt.Sprintf(`%d`, task.Vocabulary.TopicId))
 
 	return h.api.SendMessageWithButton(peerId, msg, keyboard)
 }
