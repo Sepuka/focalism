@@ -91,7 +91,7 @@ func (v *TaskRepository) Answer(task domain.Task) error {
 	_, err = v.
 		db.
 		Model(&task).
-		Column(`time`).
+		Column(`time`, `is_correct`).
 		WherePK().
 		Update()
 

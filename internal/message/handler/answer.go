@@ -47,6 +47,12 @@ func (h *Answer) Handle(req *domain2.Request) error {
 		}
 	}
 
+	if lastTask.Vocabulary.Answer != msg {
+		answer = `Wrong answer`
+	} else {
+		lastTask.IsCorrect = true
+	}
+
 	if err = h.taskRepository.Answer(lastTask); err != nil {
 		h.
 			log.
@@ -56,10 +62,6 @@ func (h *Answer) Handle(req *domain2.Request) error {
 				zap.Error(err),
 			).
 			Error(`answer time update failed`)
-	}
-
-	if lastTask.Vocabulary.Answer != msg {
-		answer = `Wrong answer`
 	}
 
 	keyboard.Buttons = button2.NextWithReturn(fmt.Sprintf(`%d`, lastTask.Vocabulary.TopicId))
