@@ -9,19 +9,22 @@ import (
 	"github.com/sepuka/vkbotserver/api"
 	"github.com/sepuka/vkbotserver/api/button"
 	domain2 "github.com/sepuka/vkbotserver/domain"
+	"go.uber.org/zap"
 )
 
 type (
 	Answer struct {
 		taskRepository domain.TaskRepository
 		api            *api.Api
+		log            *zap.SugaredLogger
 	}
 )
 
-func NewAnswer(repo domain.TaskRepository, api *api.Api) *Answer {
+func NewAnswer(repo domain.TaskRepository, api *api.Api, log *zap.SugaredLogger) *Answer {
 	return &Answer{
 		taskRepository: repo,
 		api:            api,
+		log:            log,
 	}
 }
 
@@ -31,16 +34,27 @@ func (h *Answer) Handle(req *domain2.Request) error {
 		answer   = `Correct!`
 		msg      = req.Object.Message.Text
 		peerId   = int64(req.Object.Message.FromId)
-		lastTask *domain.Task
+		lastTask domain.Task
 		keyboard = button.Keyboard{
 			OneTime: true,
 		}
 	)
 
-	if lastTask, err = h.taskRepository.GetLast(peerId); err != nil {
+	if lastTask, err = h.taskRepository.GetLast(); err != nil {
 		if errors.Is(err, errors2.NoError) {
-			// чел не получал заданий до этого
+			keyboard.Buttons = button2.ModeChoose()
+			return h.api.SendMessageWithButton(int(peerId), `выберите режим`, keyboard)
 		}
+	}
+
+	if err = h.taskRepository.Answer(lastTask); err != nil {
+		h.
+			log.
+			With(
+				zap.Int64(`peerId`, peerId),
+				zap.Int64(`taskId`, lastTask.Id),
+			).
+			Error(`answer time update failed`)
 	}
 
 	if lastTask.Vocabulary.Answer != msg {

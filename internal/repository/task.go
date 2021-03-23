@@ -58,15 +58,15 @@ func (v *TaskRepository) GetById(taskId int64) (*domain.Task, error) {
 	return task, err
 }
 
-func (v *TaskRepository) GetLast(peerId int64) (*domain.Task, error) {
+func (v *TaskRepository) GetLast() (domain.Task, error) {
 	var (
 		err  error
-		task = &domain.Task{}
+		task = domain.Task{}
 	)
 
 	err = v.
 		db.
-		Model(task).
+		Model(&task).
 		Column(`task.*`).
 		Relation(`Vocabulary`).
 		Where(`time is NULL`).
@@ -75,8 +75,22 @@ func (v *TaskRepository) GetLast(peerId int64) (*domain.Task, error) {
 		Select()
 
 	if err == pg.ErrNoRows {
-		return nil, errors.NewDatabaseNoRowsError(`There's not any waiting tasks`, err)
+		return task, errors.NewDatabaseNoRowsError(`There's not any waiting tasks`, err)
 	}
 
 	return task, err
+}
+
+func (v *TaskRepository) Answer(task domain.Task) error {
+	var (
+		err error
+	)
+
+	task.Time = time.Now().Sub(task.Datetime)
+
+	err = v.
+		db.
+		Update(task)
+
+	return err
 }

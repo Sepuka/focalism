@@ -43,7 +43,7 @@ func init() {
 						button.ButtonIdReturn:    handler.NewReturnHandler(api),
 						button.ButtonIdTopics:    handler.NewTopicHandler(api, topicRepo),
 					}
-					answerHandler = handler.NewAnswer(taskRepo, api)
+					answerHandler = handler.NewAnswer(taskRepo, api, logger)
 				)
 
 				return message2.NewMessageNew(cfg, handlers, logger, answerHandler), nil

@@ -9,7 +9,8 @@ type (
 	TaskRepository interface {
 		Create(vocabulary *Vocabulary, peerId int64) (*Task, error)
 		GetById(taskId int64) (*Task, error)
-		GetLast(peerId int64) (*Task, error)
+		GetLast() (Task, error)
+		Answer(task Task) error
 	}
 
 	Task struct {
