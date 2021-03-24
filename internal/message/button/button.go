@@ -11,9 +11,9 @@ const (
 	ButtonIdTopics    = `topics`
 
 	TextButtonType      button.Type = `text`
-	NextLabel           button.Text = `Далее`
-	ReturnLabel         button.Text = `Назад`
-	GetAnswerLabel      button.Text = `Я не знаю`
+	NextLabel           button.Text = `ещё`
+	ReturnLabel         button.Text = `назад`
+	GetAnswerLabel      button.Text = `не знаю`
 	IrregularVerbsLabel button.Text = `неправильные глаголы`
 	TopicsLabel         button.Text = `темы`
 )
@@ -25,7 +25,7 @@ func Surrender(taskId string) [][]button.Button {
 				Color: button.PrimaryColor,
 				Action: button.Action{
 					Type:  TextButtonType,
-					Label: NextLabel,
+					Label: GetAnswerLabel,
 					Payload: button.Payload{
 						Command: ButtonIdSurrender,
 						Id:      taskId,
