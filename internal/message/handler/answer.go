@@ -6,6 +6,7 @@ import (
 	errors2 "github.com/sepuka/focalism/errors"
 	"github.com/sepuka/focalism/internal/domain"
 	button2 "github.com/sepuka/focalism/internal/message/button"
+	"github.com/sepuka/focalism/internal/message/handler/comparator"
 	"github.com/sepuka/vkbotserver/api"
 	"github.com/sepuka/vkbotserver/api/button"
 	domain2 "github.com/sepuka/vkbotserver/domain"
@@ -38,6 +39,7 @@ func (h *Answer) Handle(req *domain2.Request) error {
 		keyboard = button.Keyboard{
 			OneTime: true,
 		}
+		vocabulary *domain.Vocabulary
 	)
 
 	if lastTask, err = h.taskRepository.GetLast(); err != nil {
@@ -47,10 +49,11 @@ func (h *Answer) Handle(req *domain2.Request) error {
 		}
 	}
 
-	if lastTask.Vocabulary.Answer != msg {
-		answer = `Wrong answer`
-	} else {
+	vocabulary = lastTask.Vocabulary
+	if h.Comparator(vocabulary).Compare(vocabulary, msg) {
 		lastTask.IsCorrect = true
+	} else {
+		answer = `Wrong answer`
 	}
 
 	if err = h.taskRepository.Answer(lastTask); err != nil {
@@ -67,4 +70,13 @@ func (h *Answer) Handle(req *domain2.Request) error {
 	keyboard.Buttons = button2.NextWithReturn(fmt.Sprintf(`%d`, lastTask.Vocabulary.TopicId))
 
 	return h.api.SendMessageWithButton(int(peerId), answer, keyboard)
+}
+
+func (h *Answer) Comparator(vocabulary *domain.Vocabulary) domain.Comparator {
+	switch vocabulary.Topic.Mode.Marker {
+	case string(domain.IrregularMode):
+		return comparator.NewIrregularComparator()
+	default:
+		return comparator.NewSimpleComparator()
+	}
 }

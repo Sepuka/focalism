@@ -69,6 +69,8 @@ func (v *TaskRepository) GetLast() (domain.Task, error) {
 		Model(&task).
 		Column(`task.*`).
 		Relation(`Vocabulary`).
+		Relation(`Vocabulary.Topic`).
+		Relation(`Vocabulary.Topic.Mode`).
 		Where(`time is NULL`).
 		Order(`task_id DESC`).
 		Limit(1).

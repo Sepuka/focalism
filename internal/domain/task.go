@@ -14,6 +14,10 @@ type (
 		GetTodayTasks(peerId int) (int, error)
 	}
 
+	Comparator interface {
+		Compare(vocabulary *Vocabulary, msg string) bool
+	}
+
 	Task struct {
 		Id           int64       `sql:"task_id,pk"`
 		VocabularyId int64       `sql:"vocabulary_id"`
