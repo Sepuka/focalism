@@ -45,6 +45,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		}
 		topicId          int64
 		todayTasksNumber int
+		question         string
 	)
 
 	if topicId, err = strconv.ParseInt(payload.Id, 10, 64); err != nil {
@@ -55,7 +56,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		return errors.NewDatabaseError(`could not calculate today tasks`, err)
 	}
 
-	if todayTasksNumber > maxTodayTasks {
+	if todayTasksNumber >= maxTodayTasks {
 		keyboard.Buttons = button2.Return()
 
 		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`превышен лимит заданий за день (%d), попробуйте завтра`, todayTasksNumber), keyboard)
@@ -72,6 +73,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 	}
 
 	keyboard.Buttons = button2.Surrender(task.GetId())
+	question = fmt.Sprintf(`(%d/%d) %s`, todayTasksNumber, maxTodayTasks, vocabulary.Question)
 
-	return h.api.SendMessageWithAttachmentAndButton(peerId, vocabulary.Question, vocabulary.Attachment, keyboard)
+	return h.api.SendMessageWithAttachmentAndButton(peerId, question, vocabulary.Attachment, keyboard)
 }
