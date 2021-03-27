@@ -4,7 +4,7 @@ import "strconv"
 
 type (
 	VocabularyRepository interface {
-		FindActual(topicId int64) (Vocabulary, error)
+		FindActual(topicId int64, peerId int64) (Vocabulary, error)
 		IncrViews(Vocabulary)
 	}
 

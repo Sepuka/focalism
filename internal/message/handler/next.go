@@ -62,7 +62,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`превышен лимит заданий за день (%d), попробуйте завтра`, todayTasksNumber), keyboard)
 	}
 
-	if vocabulary, err = h.vocabularyRepository.FindActual(topicId); err != nil {
+	if vocabulary, err = h.vocabularyRepository.FindActual(topicId, int64(peerId)); err != nil {
 		return errors.NewDatabaseError(`could not fetch next word`, err)
 	}
 

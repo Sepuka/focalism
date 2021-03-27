@@ -44,7 +44,7 @@ func (h *irregularHandler) Handle(req *domain.Request, payload *button.Payload) 
 		}
 	)
 
-	if vocabulary, err = h.vocabularyRepository.FindActual(irregularTopicId); err != nil {
+	if vocabulary, err = h.vocabularyRepository.FindActual(irregularTopicId, int64(peerId)); err != nil {
 		return errors.NewDatabaseError(`could not fetch next word`, err)
 	}
 
