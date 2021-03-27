@@ -32,7 +32,7 @@ func NewAnswer(repo domain.TaskRepository, api *api.Api, log *zap.SugaredLogger)
 func (h *Answer) Handle(req *domain2.Request) error {
 	var (
 		err      error
-		answer   = `Correct!`
+		answer   = `правильно!`
 		msg      = req.Object.Message.Text
 		peerId   = int64(req.Object.Message.FromId)
 		lastTask domain.Task
@@ -45,7 +45,7 @@ func (h *Answer) Handle(req *domain2.Request) error {
 	if lastTask, err = h.taskRepository.GetLast(); err != nil {
 		if errors.Is(err, errors2.NoError) {
 			keyboard.Buttons = button2.ModeChoose()
-			return h.api.SendMessageWithButton(int(peerId), `выберите режим`, keyboard)
+			return h.api.SendMessageWithButton(int(peerId), `выберите режим для занятий`, keyboard)
 		}
 	}
 
@@ -53,7 +53,7 @@ func (h *Answer) Handle(req *domain2.Request) error {
 	if h.Comparator(vocabulary).Compare(vocabulary, msg) {
 		lastTask.IsCorrect = true
 	} else {
-		answer = `Wrong answer`
+		answer = fmt.Sprintf(`вы ошиблись, правильный ответ: "%s"`, vocabulary.Answer)
 	}
 
 	if err = h.taskRepository.Answer(lastTask); err != nil {
