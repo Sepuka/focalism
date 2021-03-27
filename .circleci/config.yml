@@ -25,6 +25,7 @@ jobs:
     steps:
       - checkout
       - run: make dependencies
+      - run: make tests
       - run: make build
       - add_ssh_keys:
           fingerprints:
