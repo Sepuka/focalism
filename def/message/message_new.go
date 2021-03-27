@@ -38,7 +38,7 @@ func init() {
 					topicRepo      = ctx.Get(repository.TopicRepoDef).(domain.TopicRepository)
 					handlers       = map[string]handler.MessageHandler{
 						button.ButtonIdStart:     handler.NewStartHandler(api),
-						button.ButtonIdNext:      handler.NewNextHandler(api, vocabularyRepo, taskRepo),
+						button.ButtonIdNext:      handler.NewNextHandler(api, vocabularyRepo, taskRepo, logger),
 						button.ButtonIdSurrender: handler.NewSurrenderHandler(api, taskRepo),
 						button.ButtonIdReturn:    handler.NewReturnHandler(api),
 						button.ButtonIdTopics:    handler.NewTopicHandler(api, topicRepo),
