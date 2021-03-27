@@ -36,13 +36,14 @@ func init() {
 					vocabularyRepo = ctx.Get(repository.VocabularyRepoDef).(domain.VocabularyRepository)
 					taskRepo       = ctx.Get(repository.TaskRepoDef).(domain.TaskRepository)
 					topicRepo      = ctx.Get(repository.TopicRepoDef).(domain.TopicRepository)
+					nextHandler    = handler.NewNextHandler(api, vocabularyRepo, taskRepo, logger)
 					handlers       = map[string]handler.MessageHandler{
 						button.ButtonIdStart:     handler.NewStartHandler(api),
-						button.ButtonIdNext:      handler.NewNextHandler(api, vocabularyRepo, taskRepo, logger),
+						button.ButtonIdNext:      nextHandler,
 						button.ButtonIdSurrender: handler.NewSurrenderHandler(api, taskRepo),
 						button.ButtonIdReturn:    handler.NewReturnHandler(api),
 						button.ButtonIdTopics:    handler.NewTopicHandler(api, topicRepo),
-						button.ButtonIdIrregular: handler.NewIrregularHandler(api, vocabularyRepo, taskRepo),
+						button.ButtonIdIrregular: handler.NewIrregularHandler(nextHandler),
 					}
 					answerHandler = handler.NewAnswer(taskRepo, api, logger)
 				)
