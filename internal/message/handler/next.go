@@ -44,28 +44,27 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		keyboard   = button.Keyboard{
 			OneTime: true,
 		}
-		topicId                                int64
-		todayTasksNumber, totalVocabularyItems int
-		question                               string
+		topicId                           int64
+		tasksPerDay, totalVocabularyItems int
+		question                          string
 	)
 
 	if topicId, err = strconv.ParseInt(payload.Id, 10, 64); err != nil {
 		return errors.NewInvalidJsonError(`could not parse topic ID`, err)
 	}
 
-	if todayTasksNumber, err = h.taskRepository.GetTodayTasks(topicId, peerId); err != nil {
+	if tasksPerDay, err = h.taskRepository.GetTodayTasks(topicId, peerId); err != nil {
 		return errors.NewDatabaseError(`could not calculate today tasks`, err)
 	} else {
-		todayTasksNumber++
 		if totalVocabularyItems, err = h.vocabularyRepository.GetTotal(topicId); err != nil {
 			return errors.NewDatabaseError(`could not calculate total vocabulary items`, err)
 		}
 	}
 
-	if todayTasksNumber > totalVocabularyItems {
+	if tasksPerDay+1 > totalVocabularyItems {
 		keyboard.Buttons = button2.ReturnWithProgress(fmt.Sprintf(`%d`, topicId))
 
-		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`сегодня вы повторили все слова этой темы (%d), приходите к нам завтра`, todayTasksNumber), keyboard)
+		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`сегодня вы повторили все слова этой темы (%d), приходите к нам завтра`, tasksPerDay), keyboard)
 	}
 
 	if vocabulary, err = h.vocabularyRepository.FindActual(topicId, int64(peerId)); err != nil {
@@ -83,7 +82,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 	}
 
 	keyboard.Buttons = button2.Surrender(task.GetId())
-	question = fmt.Sprintf(`(%d / %d). "%s"`, todayTasksNumber, totalVocabularyItems, vocabulary.Question)
+	question = fmt.Sprintf(`(%d / %d). "%s"`, tasksPerDay, totalVocabularyItems, vocabulary.Question)
 
 	return h.api.SendMessageWithAttachmentAndButton(peerId, question, vocabulary.Attachment, keyboard)
 }
