@@ -14,6 +14,10 @@ type (
 		GetTodayTasks(peerId int) (int, error)
 	}
 
+	TaskProgressRepository interface {
+		GetProgress(topicId int64, peerId int64) (success int, total int, err error)
+	}
+
 	Comparator interface {
 		Compare(vocabulary *Vocabulary, msg string) bool
 	}

@@ -114,3 +114,32 @@ func (v *TaskRepository) GetTodayTasks(peerId int) (int, error) {
 
 	return cnt, err
 }
+
+func (v *TaskRepository) GetProgress(topicId int64, peerId int64) (success int, total int, err error) {
+	var (
+		tasks []domain.Task
+		task  domain.Task
+	)
+
+	err = v.
+		db.
+		Model(&tasks).
+		Column(`task.is_correct`).
+		Relation(`Vocabulary`).
+		Where(`peer_id = ? AND vocabulary.topic_id = ? AND DATE(datetime) = ?`, peerId, topicId, time.Now().Format(`2006-01-02`)).
+		Select()
+
+	if err != nil {
+		return 0, 0, err
+	}
+
+	total = len(tasks)
+
+	for _, task = range tasks {
+		if task.IsCorrect {
+			success++
+		}
+	}
+
+	return success, total, err
+}

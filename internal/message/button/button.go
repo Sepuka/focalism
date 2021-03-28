@@ -3,12 +3,13 @@ package button
 import "github.com/sepuka/vkbotserver/api/button"
 
 const (
-	ButtonIdStart     = `start`
-	ButtonIdNext      = `next`
-	ButtonIdSurrender = `surrender`
-	ButtonIdReturn    = `return`
-	ButtonIdIrregular = `irregular`
-	ButtonIdTopics    = `topics`
+	StartIdButton     = `start`
+	NextIdButton      = `next`
+	SurrenderIdButton = `surrender`
+	ReturnIdButton    = `return`
+	IrregularIdButton = `irregular`
+	TopicsIdButton    = `topics`
+	ProgressIdButton  = `progress`
 
 	TextButtonType      button.Type = `text`
 	NextLabel           button.Text = `ещё`
@@ -16,6 +17,7 @@ const (
 	GetAnswerLabel      button.Text = `не знаю`
 	IrregularVerbsLabel button.Text = `неправильные глаголы`
 	TopicsLabel         button.Text = `темы`
+	ProgressLabel       button.Text = `прогресс`
 )
 
 func Surrender(taskId string) [][]button.Button {
@@ -27,7 +29,7 @@ func Surrender(taskId string) [][]button.Button {
 					Type:  TextButtonType,
 					Label: GetAnswerLabel,
 					Payload: button.Payload{
-						Command: ButtonIdSurrender,
+						Command: SurrenderIdButton,
 						Id:      taskId,
 					}.String(),
 				},
@@ -45,7 +47,7 @@ func Return() [][]button.Button {
 					Type:  TextButtonType,
 					Label: ReturnLabel,
 					Payload: button.Payload{
-						Command: ButtonIdReturn,
+						Command: ReturnIdButton,
 					}.String(),
 				},
 			},
@@ -62,7 +64,7 @@ func ModeChoose() [][]button.Button {
 					Type:  TextButtonType,
 					Label: IrregularVerbsLabel,
 					Payload: button.Payload{
-						Command: ButtonIdIrregular,
+						Command: IrregularIdButton,
 					}.String(),
 				},
 			},
@@ -72,7 +74,7 @@ func ModeChoose() [][]button.Button {
 					Type:  TextButtonType,
 					Label: TopicsLabel,
 					Payload: button.Payload{
-						Command: ButtonIdTopics,
+						Command: TopicsIdButton,
 					}.String(),
 				},
 			},
@@ -89,7 +91,7 @@ func NextWithReturn(topicId string) [][]button.Button {
 					Type:  TextButtonType,
 					Label: ReturnLabel,
 					Payload: button.Payload{
-						Command: ButtonIdReturn,
+						Command: ReturnIdButton,
 					}.String(),
 				},
 			},
@@ -99,7 +101,18 @@ func NextWithReturn(topicId string) [][]button.Button {
 					Type:  TextButtonType,
 					Label: NextLabel,
 					Payload: button.Payload{
-						Command: ButtonIdNext,
+						Command: NextIdButton,
+						Id:      topicId,
+					}.String(),
+				},
+			},
+			{
+				Color: button.PositiveColor,
+				Action: button.Action{
+					Type:  TextButtonType,
+					Label: ProgressLabel,
+					Payload: button.Payload{
+						Command: ProgressIdButton,
 						Id:      topicId,
 					}.String(),
 				},

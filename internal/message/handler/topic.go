@@ -58,7 +58,7 @@ func (h *topicHandler) Handle(req *domain.Request, payload *button.Payload) erro
 					Type:  button2.TextButtonType,
 					Label: button.Text(topic.Title),
 					Payload: button.Payload{
-						Command: button2.ButtonIdNext,
+						Command: button2.NextIdButton,
 						Id:      fmt.Sprintf(`%d`, topic.TopicId),
 					}.String(),
 				},

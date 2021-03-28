@@ -9,7 +9,9 @@ import (
 	"github.com/sepuka/focalism/internal/repository"
 )
 
-const TaskRepoDef = `repo.task.def`
+const (
+	TaskRepoDef     = `repo.task.def`
+)
 
 func init() {
 	def.Register(func(builder *di.Builder, cfg *config.Config) error {

@@ -32,7 +32,7 @@ func NewAnswer(repo domain.TaskRepository, api *api.Api, log *zap.SugaredLogger)
 func (h *Answer) Handle(req *domain2.Request) error {
 	var (
 		err      error
-		answer   = `правильно!`
+		answer   = `правильно! ещё?`
 		msg      = req.Object.Message.Text
 		peerId   = int64(req.Object.Message.FromId)
 		lastTask domain.Task

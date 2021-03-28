@@ -35,15 +35,17 @@ func init() {
 					logger         = ctx.Get(log.LoggerDef).(*zap.SugaredLogger)
 					vocabularyRepo = ctx.Get(repository.VocabularyRepoDef).(domain.VocabularyRepository)
 					taskRepo       = ctx.Get(repository.TaskRepoDef).(domain.TaskRepository)
+					progressRepo   = ctx.Get(repository.TaskRepoDef).(domain.TaskProgressRepository)
 					topicRepo      = ctx.Get(repository.TopicRepoDef).(domain.TopicRepository)
 					nextHandler    = handler.NewNextHandler(api, vocabularyRepo, taskRepo, logger)
 					handlers       = map[string]handler.MessageHandler{
-						button.ButtonIdStart:     handler.NewStartHandler(api),
-						button.ButtonIdNext:      nextHandler,
-						button.ButtonIdSurrender: handler.NewSurrenderHandler(api, taskRepo),
-						button.ButtonIdReturn:    handler.NewReturnHandler(api),
-						button.ButtonIdTopics:    handler.NewTopicHandler(api, topicRepo),
-						button.ButtonIdIrregular: handler.NewIrregularHandler(nextHandler),
+						button.StartIdButton:     handler.NewStartHandler(api),
+						button.NextIdButton:      nextHandler,
+						button.SurrenderIdButton: handler.NewSurrenderHandler(api, taskRepo),
+						button.ReturnIdButton:    handler.NewReturnHandler(api),
+						button.TopicsIdButton:    handler.NewTopicHandler(api, topicRepo),
+						button.IrregularIdButton: handler.NewIrregularHandler(nextHandler),
+						button.ProgressIdButton:  handler.NewProgressHandler(api, progressRepo, logger),
 					}
 					answerHandler = handler.NewAnswer(taskRepo, api, logger)
 				)

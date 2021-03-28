@@ -83,7 +83,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 	}
 
 	keyboard.Buttons = button2.Surrender(task.GetId())
-	question = fmt.Sprintf(`(%d / %d). %s`, todayTasksNumber, maxTodayTasks, vocabulary.Question)
+	question = fmt.Sprintf(`(%d / %d). "%s"`, todayTasksNumber, maxTodayTasks, vocabulary.Question)
 
 	return h.api.SendMessageWithAttachmentAndButton(peerId, question, vocabulary.Attachment, keyboard)
 }
