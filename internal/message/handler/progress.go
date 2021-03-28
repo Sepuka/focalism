@@ -8,7 +8,6 @@ import (
 	"github.com/sepuka/vkbotserver/api"
 	"github.com/sepuka/vkbotserver/api/button"
 	"github.com/sepuka/vkbotserver/domain"
-	"go.uber.org/zap"
 	"strconv"
 )
 
@@ -16,30 +15,30 @@ type (
 	progressHandler struct {
 		api            *api.Api
 		taskRepository domain2.TaskProgressRepository
-		log            *zap.SugaredLogger
+		vocabularyRepo domain2.VocabularyRepository
 	}
 )
 
 func NewProgressHandler(
 	api *api.Api,
 	taskRepo domain2.TaskProgressRepository,
-	log *zap.SugaredLogger,
+	vocabularyRepo domain2.VocabularyRepository,
 ) *progressHandler {
 	return &progressHandler{
 		api:            api,
 		taskRepository: taskRepo,
-		log:            log,
+		vocabularyRepo: vocabularyRepo,
 	}
 }
 
 func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) error {
 	var (
-		err            error
-		topicId        int64
-		peerId         = int64(req.Object.Message.FromId)
-		success, total int
-		msgTmpl        = `сегодня вы верно назвали %d слов из %d попыток`
-		keyboard       = button.Keyboard{
+		err                      error
+		topicId                  int64
+		peerId                   = int64(req.Object.Message.FromId)
+		success, attempts, total int
+		msgTmpl                  = `сегодня вы верно назвали %d слов из %d попыток`
+		keyboard                 = button.Keyboard{
 			OneTime: true,
 			Buttons: button2.NextWithReturn(fmt.Sprintf(`%d`, topicId)),
 		}
@@ -49,9 +48,19 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		return errors.NewInvalidJsonError(`could not parse topic ID`, err)
 	}
 
-	success, total, err = h.
+	if success, attempts, err = h.
 		taskRepository.
-		GetProgress(topicId, peerId)
+		GetProgress(topicId, peerId); err != nil {
+		return errors.NewDatabaseError(`could not fetch current user's progress`, err)
+	}
 
-	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, success, total), keyboard)
+	if total, err = h.vocabularyRepo.GetTotal(topicId); err != nil {
+		return errors.NewDatabaseError(`could not fetch total vocabulary items`, err)
+	}
+
+	if attempts == total {
+		keyboard.Buttons = button2.Return()
+	}
+
+	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, success, attempts), keyboard)
 }

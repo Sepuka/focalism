@@ -45,7 +45,7 @@ func init() {
 						button.ReturnIdButton:    handler.NewReturnHandler(api),
 						button.TopicsIdButton:    handler.NewTopicHandler(api, topicRepo),
 						button.IrregularIdButton: handler.NewIrregularHandler(nextHandler),
-						button.ProgressIdButton:  handler.NewProgressHandler(api, progressRepo, logger),
+						button.ProgressIdButton:  handler.NewProgressHandler(api, progressRepo, vocabularyRepo),
 					}
 					answerHandler = handler.NewAnswer(taskRepo, api, logger)
 				)
