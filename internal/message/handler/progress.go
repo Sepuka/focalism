@@ -40,7 +40,6 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		msgTmpl                  = `сегодня вы верно назвали %d слов из %d попыток`
 		keyboard                 = button.Keyboard{
 			OneTime: true,
-			Buttons: button2.NextWithReturn(fmt.Sprintf(`%d`, topicId)),
 		}
 	)
 
@@ -60,6 +59,8 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 
 	if attempts == total {
 		keyboard.Buttons = button2.Return()
+	} else {
+		keyboard.Buttons = button2.NextWithReturn(fmt.Sprintf(`%d`, topicId))
 	}
 
 	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, success, attempts), keyboard)
