@@ -25,7 +25,7 @@ func NewReturnHandler(
 // It should show 2 buttons in order to mode choosing: Irregular verbs OR Topic mode
 func (h *returnHandler) Handle(req *domain.Request, payload *button.Payload) error {
 	const (
-		msg = `Пожалуйста, выберете упражнение`
+		msg = `Пожалуйста, выберите упражнение`
 	)
 
 	var (
