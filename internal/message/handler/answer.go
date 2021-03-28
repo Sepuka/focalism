@@ -67,7 +67,7 @@ func (h *Answer) Handle(req *domain2.Request) error {
 			Error(`answer time update failed`)
 	}
 
-	keyboard.Buttons = button2.NextWithReturn(fmt.Sprintf(`%d`, lastTask.Vocabulary.TopicId))
+	keyboard.Buttons = button2.NextWithReturnAndProgress(fmt.Sprintf(`%d`, lastTask.Vocabulary.TopicId))
 
 	return h.api.SendMessageWithButton(int(peerId), answer, keyboard)
 }

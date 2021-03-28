@@ -106,6 +106,34 @@ func NextWithReturn(topicId string) [][]button.Button {
 					}.String(),
 				},
 			},
+		},
+	}
+}
+
+func NextWithReturnAndProgress(topicId string) [][]button.Button {
+	return [][]button.Button{
+		{
+			{
+				Color: button.SecondaryColor,
+				Action: button.Action{
+					Type:  TextButtonType,
+					Label: ReturnLabel,
+					Payload: button.Payload{
+						Command: ReturnIdButton,
+					}.String(),
+				},
+			},
+			{
+				Color: button.PositiveColor,
+				Action: button.Action{
+					Type:  TextButtonType,
+					Label: NextLabel,
+					Payload: button.Payload{
+						Command: NextIdButton,
+						Id:      topicId,
+					}.String(),
+				},
+			},
 			{
 				Color: button.PrimaryColor,
 				Action: button.Action{
