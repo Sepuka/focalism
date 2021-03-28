@@ -100,7 +100,7 @@ func (v *TaskRepository) Answer(task domain.Task) error {
 	return err
 }
 
-func (v *TaskRepository) GetTodayTasks(peerId int) (int, error) {
+func (v *TaskRepository) GetTodayTasks(topicId int64, peerId int) (int, error) {
 	var (
 		err error
 		cnt int
@@ -109,7 +109,8 @@ func (v *TaskRepository) GetTodayTasks(peerId int) (int, error) {
 	cnt, err = v.
 		db.
 		Model(&domain.Task{}).
-		Where(`peer_id = ? AND DATE(datetime) = ?`, peerId, time.Now().Format(`2006-01-02`)).
+		Relation(`Vocabulary`).
+		Where(`peer_id = ? AND DATE(datetime) = ? AND topic_id = ?`, peerId, time.Now().Format(`2006-01-02`), topicId).
 		Count()
 
 	return cnt, err

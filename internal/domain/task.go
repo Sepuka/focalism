@@ -11,7 +11,7 @@ type (
 		GetById(taskId int64) (*Task, error)
 		GetLast() (Task, error)
 		Answer(task Task) error
-		GetTodayTasks(peerId int) (int, error)
+		GetTodayTasks(topicId int64, peerId int) (int, error)
 	}
 
 	TaskProgressRepository interface {

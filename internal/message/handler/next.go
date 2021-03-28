@@ -53,7 +53,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		return errors.NewInvalidJsonError(`could not parse topic ID`, err)
 	}
 
-	if todayTasksNumber, err = h.taskRepository.GetTodayTasks(peerId); err != nil {
+	if todayTasksNumber, err = h.taskRepository.GetTodayTasks(topicId, peerId); err != nil {
 		return errors.NewDatabaseError(`could not calculate today tasks`, err)
 	} else {
 		todayTasksNumber++
