@@ -12,7 +12,7 @@ const (
 	ProgressIdButton  = `progress`
 
 	TextButtonType      button.Type = `text`
-	NextLabel           button.Text = `ещё`
+	NextLabel           button.Text = `ещё слово`
 	ReturnLabel         button.Text = `назад`
 	GetAnswerLabel      button.Text = `не знаю`
 	IrregularVerbsLabel button.Text = `неправильные глаголы`

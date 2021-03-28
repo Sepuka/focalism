@@ -53,5 +53,5 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		taskRepository.
 		GetProgress(topicId, peerId)
 
-	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, total, success), keyboard)
+	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, success, total), keyboard)
 }
