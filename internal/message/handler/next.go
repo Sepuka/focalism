@@ -58,6 +58,8 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 
 	if todayTasksNumber, err = h.taskRepository.GetTodayTasks(peerId); err != nil {
 		return errors.NewDatabaseError(`could not calculate today tasks`, err)
+	} else {
+		todayTasksNumber++
 	}
 
 	if todayTasksNumber >= maxTodayTasks {
