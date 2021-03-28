@@ -38,7 +38,7 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		topicId        int64
 		peerId         = int64(req.Object.Message.FromId)
 		success, total int
-		msgTmpl        = `сегодня вы верно назвали %d слов из %d`
+		msgTmpl        = `сегодня вы верно назвали %d слов из %d попыток`
 		keyboard       = button.Keyboard{
 			OneTime: true,
 			Buttons: button2.NextWithReturn(fmt.Sprintf(`%d`, topicId)),

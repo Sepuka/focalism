@@ -36,9 +36,6 @@ func NewNextHandler(
 }
 
 func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error {
-	const (
-		maxTodayTasks = 10
-	)
 	var (
 		err        error
 		vocabulary domain2.Vocabulary
@@ -47,9 +44,9 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		keyboard   = button.Keyboard{
 			OneTime: true,
 		}
-		topicId          int64
-		todayTasksNumber int
-		question         string
+		topicId                                int64
+		todayTasksNumber, totalVocabularyItems int
+		question                               string
 	)
 
 	if topicId, err = strconv.ParseInt(payload.Id, 10, 64); err != nil {
@@ -60,12 +57,15 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		return errors.NewDatabaseError(`could not calculate today tasks`, err)
 	} else {
 		todayTasksNumber++
+		if totalVocabularyItems, err = h.vocabularyRepository.GetTotal(topicId); err != nil {
+			return errors.NewDatabaseError(`could not calculate total vocabulary items`, err)
+		}
 	}
 
-	if todayTasksNumber >= maxTodayTasks {
+	if todayTasksNumber >= totalVocabularyItems {
 		keyboard.Buttons = button2.Return()
 
-		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`превышен лимит заданий за день (%d), попробуйте завтра`, todayTasksNumber), keyboard)
+		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`сегодня вы повторили все слова этой темы (%d), приходите к нам завтра`, todayTasksNumber), keyboard)
 	}
 
 	if vocabulary, err = h.vocabularyRepository.FindActual(topicId, int64(peerId)); err != nil {
@@ -83,7 +83,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 	}
 
 	keyboard.Buttons = button2.Surrender(task.GetId())
-	question = fmt.Sprintf(`(%d / %d). "%s"`, todayTasksNumber, maxTodayTasks, vocabulary.Question)
+	question = fmt.Sprintf(`(%d / %d). "%s"`, todayTasksNumber, totalVocabularyItems, vocabulary.Question)
 
 	return h.api.SendMessageWithAttachmentAndButton(peerId, question, vocabulary.Attachment, keyboard)
 }

@@ -42,3 +42,18 @@ func (v *VocabularyRepository) IncrViews(vocabulary domain.Vocabulary) {
 		WherePK().
 		Update()
 }
+
+func (v *VocabularyRepository) GetTotal(topicId int64) (int, error) {
+	var (
+		err   error
+		total int
+	)
+
+	total, err = v.
+		db.
+		Model(&domain.Vocabulary{}).
+		Where(`topic_id = ?`, topicId).
+		Count()
+
+	return total, err
+}

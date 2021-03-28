@@ -15,7 +15,7 @@ type (
 	}
 
 	TaskProgressRepository interface {
-		GetProgress(topicId int64, peerId int64) (success int, total int, err error)
+		GetProgress(topicId int64, peerId int64) (success int, attempts int, err error)
 	}
 
 	Comparator interface {

@@ -6,6 +6,7 @@ type (
 	VocabularyRepository interface {
 		FindActual(topicId int64, peerId int64) (Vocabulary, error)
 		IncrViews(Vocabulary)
+		GetTotal(topicId int64) (int, error)
 	}
 
 	Vocabulary struct {
