@@ -20,6 +20,20 @@ const (
 	ProgressLabel       button.Text = `прогресс`
 )
 
+func progress(topicId string) button.Button {
+	return button.Button{
+		Color: button.PrimaryColor,
+		Action: button.Action{
+			Type:  TextButtonType,
+			Label: ProgressLabel,
+			Payload: button.Payload{
+				Command: ProgressIdButton,
+				Id:      topicId,
+			}.String(),
+		},
+	}
+}
+
 func Surrender(taskId string) [][]button.Button {
 	return [][]button.Button{
 		{
@@ -51,6 +65,24 @@ func Return() [][]button.Button {
 					}.String(),
 				},
 			},
+		},
+	}
+}
+
+func ReturnWithProgress(topicId string) [][]button.Button {
+	return [][]button.Button{
+		{
+			{
+				Color: button.SecondaryColor,
+				Action: button.Action{
+					Type:  TextButtonType,
+					Label: ReturnLabel,
+					Payload: button.Payload{
+						Command: ReturnIdButton,
+					}.String(),
+				},
+			},
+			progress(topicId),
 		},
 	}
 }
@@ -134,17 +166,7 @@ func NextWithReturnAndProgress(topicId string) [][]button.Button {
 					}.String(),
 				},
 			},
-			{
-				Color: button.PrimaryColor,
-				Action: button.Action{
-					Type:  TextButtonType,
-					Label: ProgressLabel,
-					Payload: button.Payload{
-						Command: ProgressIdButton,
-						Id:      topicId,
-					}.String(),
-				},
-			},
+			progress(topicId),
 		},
 	}
 }
