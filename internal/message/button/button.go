@@ -96,7 +96,7 @@ func NextWithReturn(topicId string) [][]button.Button {
 				},
 			},
 			{
-				Color: button.PrimaryColor,
+				Color: button.PositiveColor,
 				Action: button.Action{
 					Type:  TextButtonType,
 					Label: NextLabel,
@@ -107,7 +107,7 @@ func NextWithReturn(topicId string) [][]button.Button {
 				},
 			},
 			{
-				Color: button.PositiveColor,
+				Color: button.PrimaryColor,
 				Action: button.Action{
 					Type:  TextButtonType,
 					Label: ProgressLabel,
@@ -115,21 +115,6 @@ func NextWithReturn(topicId string) [][]button.Button {
 						Command: ProgressIdButton,
 						Id:      topicId,
 					}.String(),
-				},
-			},
-		},
-	}
-}
-
-func Answer(payload button.Payload) [][]button.Button {
-	return [][]button.Button{
-		{
-			{
-				Color: button.NegativeColor,
-				Action: button.Action{
-					Type:    TextButtonType,
-					Label:   GetAnswerLabel,
-					Payload: payload.String(),
 				},
 			},
 		},
