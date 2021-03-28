@@ -62,7 +62,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		}
 	}
 
-	if todayTasksNumber >= totalVocabularyItems {
+	if todayTasksNumber > totalVocabularyItems {
 		keyboard.Buttons = button2.Return()
 
 		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`сегодня вы повторили все слова этой темы (%d), приходите к нам завтра`, todayTasksNumber), keyboard)
