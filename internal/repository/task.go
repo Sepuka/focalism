@@ -110,7 +110,7 @@ func (v *TaskRepository) GetTodayTasks(topicId int64, peerId int) (int, error) {
 		db.
 		Model(&domain.Task{}).
 		Relation(`Vocabulary`).
-		Where(`peer_id = ? AND DATE(datetime) = ? AND topic_id = ?`, peerId, time.Now().Format(`2006-01-02`), topicId).
+		Where(`peer_id = ? AND DATE(datetime) = ? AND topic_id = ? AND is_correct = true`, peerId, time.Now().Format(`2006-01-02`), topicId).
 		Count()
 
 	return cnt, err

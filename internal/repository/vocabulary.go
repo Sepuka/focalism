@@ -26,8 +26,8 @@ func (v *VocabularyRepository) FindActual(topicId int64, peerId int64) (domain.V
 		db.
 		Model(&vocabulary).
 		Join(`LEFT OUTER JOIN tasks AS task`).
-		JoinOn(`task.vocabulary_id = vocabulary.vocabulary_id AND DATE(datetime) = ? AND peer_id = ?`, time.Now().Format(`2006-01-02`), peerId).
-		Where(`topic_id = ? AND task_id IS NULL`, topicId).
+		JoinOn(`task.vocabulary_id = vocabulary.vocabulary_id AND DATE(task.datetime) = ? AND peer_id = ?`, time.Now().Format(`2006-01-02`), peerId).
+		Where(`topic_id = ? AND (task_id IS NULL OR is_correct = false)`, topicId).
 		Limit(1).
 		Select()
 
