@@ -41,7 +41,7 @@ func init() {
 					handlers       = map[string]handler.MessageHandler{
 						button.StartIdButton:     handler.NewStartHandler(api),
 						button.NextIdButton:      nextHandler,
-						button.SurrenderIdButton: handler.NewSurrenderHandler(api, taskRepo),
+						button.SurrenderIdButton: handler.NewSurrenderHandler(api, taskRepo, logger),
 						button.ReturnIdButton:    handler.NewReturnHandler(api),
 						button.TopicsIdButton:    handler.NewTopicHandler(api, topicRepo),
 						button.IrregularIdButton: handler.NewIrregularHandler(nextHandler),

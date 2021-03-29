@@ -35,24 +35,24 @@ func (v *TaskRepository) Create(vocabulary domain.Vocabulary, peerId int64) (*do
 	return task, err
 }
 
-func (v *TaskRepository) GetById(taskId int64) (*domain.Task, error) {
+func (v *TaskRepository) GetById(taskId int64) (domain.Task, error) {
 	var (
 		err  error
-		task = &domain.Task{
+		task = domain.Task{
 			Id: taskId,
 		}
 	)
 
 	err = v.
 		db.
-		Model(task).
+		Model(&task).
 		Column(`task.*`).
 		Relation(`Vocabulary`).
 		WherePK().
 		Select()
 
 	if err != nil {
-		return nil, err
+		return task, err
 	}
 
 	return task, err
