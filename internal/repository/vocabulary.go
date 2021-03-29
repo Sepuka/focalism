@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/orm"
 	"github.com/sepuka/focalism/internal/domain"
 	"time"
 )
@@ -20,14 +21,19 @@ func (v *VocabularyRepository) FindActual(topicId int64, peerId int64) (domain.V
 	var (
 		err        error
 		vocabulary = domain.Vocabulary{}
+		subQuery   *orm.Query
 	)
+
+	subQuery = v.
+		db.
+		Model((*domain.Task)(nil)).
+		ColumnExpr(`vocabulary_id`).
+		Where(`DATE(task.datetime) = ? AND peer_id = ? AND is_correct = true`, time.Now().Format(`2006-01-02`), peerId)
 
 	err = v.
 		db.
 		Model(&vocabulary).
-		Join(`LEFT OUTER JOIN tasks AS task`).
-		JoinOn(`task.vocabulary_id = vocabulary.vocabulary_id AND DATE(task.datetime) = ? AND peer_id = ?`, time.Now().Format(`2006-01-02`), peerId).
-		Where(`topic_id = ? AND (task_id IS NULL OR is_correct = false)`, topicId).
+		Where(`topic_id = ? AND vocabulary_id NOT IN (?)`, topicId, subQuery).
 		Limit(1).
 		Select()
 
