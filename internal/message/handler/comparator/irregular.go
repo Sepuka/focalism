@@ -2,7 +2,6 @@ package comparator
 
 import (
 	"github.com/sepuka/focalism/internal/domain"
-	"reflect"
 	"regexp"
 	"strings"
 )
@@ -34,5 +33,19 @@ func (c *irregularComparator) Compare(vocabulary *domain.Vocabulary, msg string)
 	expected = regexp.MustCompile(regexpPattern).Split(answer, maxWords)
 	actual = regexp.MustCompile(regexpPattern).Split(strings.ToLower(msg), maxWords)
 
-	return reflect.DeepEqual(expected, actual)
+	if len(expected) > len(actual) {
+		return false
+	}
+
+	for index, word := range expected {
+		if actual[index] == `` {
+			continue
+		}
+
+		if strings.Trim(actual[index], ` `) != word {
+			return false
+		}
+	}
+
+	return true
 }
