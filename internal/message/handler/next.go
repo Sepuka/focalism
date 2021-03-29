@@ -70,7 +70,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 	if vocabulary, err = h.vocabularyRepository.FindActual(topicId, int64(peerId)); err != nil {
 		h.log.Debugf(`could not fetch next word: %s`, err)
 
-		keyboard.Buttons = button2.Return()
+		keyboard.Buttons = button2.ReturnWithProgress(fmt.Sprintf(`%d`, topicId))
 
 		return h.api.SendMessageWithButton(peerId, `Извините, но слова этого вида закончились. Приходите завтра`, keyboard)
 	}
