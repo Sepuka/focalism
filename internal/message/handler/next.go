@@ -81,7 +81,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		return errors.NewDatabaseError(`could not create new task`, err)
 	}
 
-	keyboard.Buttons = button2.Surrender(task.GetId())
+	keyboard.Buttons = button2.SurrenderAndReturn(task.GetId())
 	question = fmt.Sprintf(`(%d / %d). "%s"`, tasksPerDay+1, totalVocabularyItems, vocabulary.Question)
 
 	return h.api.SendMessageWithAttachmentAndButton(peerId, question, vocabulary.Attachment, keyboard)

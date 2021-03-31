@@ -34,7 +34,7 @@ func progress(topicId string) button.Button {
 	}
 }
 
-func Surrender(taskId string) [][]button.Button {
+func SurrenderAndReturn(taskId string) [][]button.Button {
 	return [][]button.Button{
 		{
 			{
@@ -45,6 +45,16 @@ func Surrender(taskId string) [][]button.Button {
 					Payload: button.Payload{
 						Command: SurrenderIdButton,
 						Id:      taskId,
+					}.String(),
+				},
+			},
+			{
+				Color: button.SecondaryColor,
+				Action: button.Action{
+					Type:  TextButtonType,
+					Label: ReturnLabel,
+					Payload: button.Payload{
+						Command: ReturnIdButton,
 					}.String(),
 				},
 			},
