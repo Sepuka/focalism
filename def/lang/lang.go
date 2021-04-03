@@ -19,13 +19,21 @@ func init() {
 	def.Register(func(builder *di.Builder, cfg *config.Config) error {
 		return builder.Add(di.Def{
 			Build: func(container di.Container) (interface{}, error) {
-				return nil, message2.Set(language.Russian, context.KeyLangTasksPerDay, plural.Selectf(1, `%d`,
+				var (
+					err error
+				)
+
+				if err = message2.Set(language.Russian, context.KeyLangTasksPerDay, plural.Selectf(1, `%d`,
 					plural.One, `%d слово`,
 					plural.Few, `%d слова`,
 					plural.Many, `%d слов`,
 					plural.Other, `%d слов`,
-				),
-				)
+				)); err != nil {
+					return nil, err
+				}
+
+				return nil, err
+
 			},
 			Close: nil,
 			Name:  dictionaryDef,
