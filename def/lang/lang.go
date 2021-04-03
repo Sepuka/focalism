@@ -4,7 +4,7 @@ import (
 	"github.com/sarulabs/di"
 	"github.com/sepuka/focalism/def"
 	"github.com/sepuka/focalism/internal/config"
-	"github.com/sepuka/focalism/internal/context"
+	"github.com/sepuka/focalism/internal/lang"
 	"golang.org/x/text/feature/plural"
 	"golang.org/x/text/language"
 	message2 "golang.org/x/text/message"
@@ -23,7 +23,7 @@ func init() {
 					err error
 				)
 
-				if err = message2.Set(language.Russian, context.KeyLangTasksPerDay, plural.Selectf(1, `%d`,
+				if err = message2.Set(language.Russian, lang.KeyLangTasksPerDay, plural.Selectf(1, `%d`,
 					plural.One, `%d слово`,
 					plural.Few, `%d слова`,
 					plural.Many, `%d слов`,

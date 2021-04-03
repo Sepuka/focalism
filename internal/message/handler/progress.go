@@ -2,10 +2,9 @@ package handler
 
 import (
 	"fmt"
-	"github.com/sepuka/focalism/def/lang"
 	"github.com/sepuka/focalism/errors"
-	"github.com/sepuka/focalism/internal/context"
 	domain2 "github.com/sepuka/focalism/internal/domain"
+	"github.com/sepuka/focalism/internal/lang"
 	button2 "github.com/sepuka/focalism/internal/message/button"
 	"github.com/sepuka/vkbotserver/api"
 	"github.com/sepuka/vkbotserver/api/button"
@@ -44,15 +43,12 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		keyboard                 = button.Keyboard{
 			OneTime: true,
 		}
-		reqContext     = context.GetContext(req)
-		printerBuilder context.PrinterBuilder
-		printer        *message.Printer
+		printer *message.Printer
 	)
 
-	if err = reqContext.Container.Fill(lang.PrinterBuilderDef, &printerBuilder); err != nil {
-		return errors.NewInternalError(`could not build printerBuilder`, err)
+	if printer, err = Printer(req); err != nil {
+		return errors.NewInternalError(`could not build language printer`, err)
 	}
-	printer = printerBuilder(reqContext.Lang)
 
 	if topicId, err = strconv.ParseInt(payload.Id, 10, 64); err != nil {
 		return errors.NewInvalidJsonError(`could not parse topic ID`, err)
@@ -74,7 +70,7 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		keyboard.Buttons = button2.NextWithReturn(fmt.Sprintf(`%d`, topicId))
 	}
 
-	successAttempts := printer.Sprintf(context.KeyLangTasksPerDay, success)
+	successAttempts := printer.Sprintf(lang.KeyLangTasksPerDay, success)
 
 	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, successAttempts, attempts), keyboard)
 }
