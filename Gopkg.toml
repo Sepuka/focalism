@@ -12,7 +12,8 @@
 
 [[constraint]]
   name = "github.com/sepuka/vkbotserver"
-  version = "v0.0.6"
+  #version = "v0.0.6"
+  branch = "main"
 
 [[constraint]]
   name = "go.uber.org/zap"
@@ -21,3 +22,7 @@
 [[constraint]]
   name = "github.com/go-pg/pg"
   version = "v8.0.7"
+
+[[constraint]]
+  name = "github.com/golang/text"
+  version = "v0.3.5"

@@ -26,7 +26,7 @@ func Build(cfgPath string) error {
 		fnc     containerFnc
 	)
 
-	builder, err = di.NewBuilder()
+	builder, err = di.NewBuilder(di.App, di.Request)
 	if err != nil {
 		return err
 	}

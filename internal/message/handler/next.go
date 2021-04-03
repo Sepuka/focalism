@@ -2,13 +2,16 @@ package handler
 
 import (
 	"fmt"
+	"github.com/sepuka/focalism/def/lang"
 	"github.com/sepuka/focalism/errors"
+	"github.com/sepuka/focalism/internal/context"
 	domain2 "github.com/sepuka/focalism/internal/domain"
 	button2 "github.com/sepuka/focalism/internal/message/button"
 	"github.com/sepuka/vkbotserver/api"
 	"github.com/sepuka/vkbotserver/api/button"
 	"github.com/sepuka/vkbotserver/domain"
 	"go.uber.org/zap"
+	"golang.org/x/text/message"
 	"strconv"
 )
 
@@ -46,8 +49,17 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		}
 		topicId                           int64
 		tasksPerDay, totalVocabularyItems int
+		tasksPerDayLang                   string
 		question                          string
+		reqContext                        = context.GetContext(req)
+		printerBuilder                    context.PrinterBuilder
+		printer                           *message.Printer
 	)
+
+	if err = reqContext.Container.Fill(lang.PrinterBuilderDef, &printerBuilder); err != nil {
+		return errors.NewInternalError(`could not build printerBuilder`, err)
+	}
+	printer = printerBuilder(reqContext.Lang)
 
 	if topicId, err = strconv.ParseInt(payload.Id, 10, 64); err != nil {
 		return errors.NewInvalidJsonError(`could not parse topic ID`, err)
@@ -63,8 +75,9 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 
 	if tasksPerDay+1 > totalVocabularyItems {
 		keyboard.Buttons = button2.ReturnWithProgress(fmt.Sprintf(`%d`, topicId))
+		tasksPerDayLang = printer.Sprintf(context.KeyLangTasksPerDay, tasksPerDay)
 
-		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`сегодня вы повторили все слова этой темы (%d), приходите к нам завтра`, tasksPerDay), keyboard)
+		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`сегодня вы повторили все слова этой темы (%s), приходите к нам завтра`, tasksPerDayLang), keyboard)
 	}
 
 	if vocabulary, err = h.vocabularyRepository.FindActual(topicId, int64(peerId)); err != nil {

@@ -22,18 +22,16 @@ func init() {
 		return builder.Add(di.Def{
 			Build: func(container di.Container) (interface{}, error) {
 				var (
-					handlerMap = container.Get(messageDef.HandlerMapDef).(message.HandlerMap)
-					handler    = container.Get(middleware.BotMiddlewareDef).(middleware2.HandlerFunc)
-					logger     = container.Get(log.LoggerDef).(*zap.SugaredLogger)
+					handlerMap     = container.Get(messageDef.HandlerMapDef).(message.HandlerMap)
+					middlewareList = container.Get(middleware.BotMiddlewareDef).(middleware2.HandlerFunc)
+					logger         = container.Get(log.LoggerDef).(*zap.SugaredLogger)
 				)
 
-				return server.NewSocketServer(cfg.Server, handlerMap, handler, logger), nil
+				return server.NewSocketServer(cfg.Server, handlerMap, middlewareList, logger), nil
 			},
 			Close:    nil,
 			Name:     Bot,
-			Scope:    "",
-			Tags:     nil,
-			Unshared: false,
+			Scope:    di.App,
 		})
 	})
 }

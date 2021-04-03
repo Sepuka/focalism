@@ -19,6 +19,8 @@ func init() {
 				var (
 					terminalMiddleware = []func(handlerFunc middleware.HandlerFunc) middleware.HandlerFunc{
 						middleware.Panic,
+						NewContext(ctx),
+						Language,
 					}
 				)
 
