@@ -58,7 +58,7 @@ func (v *TaskRepository) GetById(taskId int64) (domain.Task, error) {
 	return task, err
 }
 
-func (v *TaskRepository) GetLast() (domain.Task, error) {
+func (v *TaskRepository) GetLast(peerId int64) (domain.Task, error) {
 	var (
 		err  error
 		task = domain.Task{}
@@ -71,7 +71,7 @@ func (v *TaskRepository) GetLast() (domain.Task, error) {
 		Relation(`Vocabulary`).
 		Relation(`Vocabulary.Topic`).
 		Relation(`Vocabulary.Topic.Mode`).
-		Where(`time is NULL`).
+		Where(`time is NULL AND peer_id = ?`, peerId).
 		Order(`task_id DESC`).
 		Limit(1).
 		Select()

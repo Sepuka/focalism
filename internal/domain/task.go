@@ -9,7 +9,7 @@ type (
 	TaskRepository interface {
 		Create(vocabulary Vocabulary, peerId int64) (*Task, error)
 		GetById(taskId int64) (Task, error)
-		GetLast() (Task, error)
+		GetLast(peerId int64) (Task, error)
 		Answer(task Task) error
 		GetTodayTasks(topicId int64, peerId int) (int, error)
 	}

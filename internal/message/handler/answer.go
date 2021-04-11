@@ -42,7 +42,7 @@ func (h *Answer) Handle(req *domain2.Request) error {
 		vocabulary *domain.Vocabulary
 	)
 
-	if lastTask, err = h.taskRepository.GetLast(); err != nil {
+	if lastTask, err = h.taskRepository.GetLast(peerId); err != nil {
 		if errors.Is(err, errors2.NoError) {
 			keyboard.Buttons = button2.ModeChoose()
 			return h.api.SendMessageWithButton(int(peerId), `выберите режим для занятий`, keyboard)
