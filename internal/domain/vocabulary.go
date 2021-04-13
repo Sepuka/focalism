@@ -1,10 +1,13 @@
 package domain
 
-import "strconv"
+import (
+	"strconv"
+	"time"
+)
 
 type (
 	VocabularyRepository interface {
-		FindActual(topicId int64, peerId int64) (Vocabulary, error)
+		FindActual(topicId int64, peerId int64, date time.Time) (Vocabulary, error)
 		IncrViews(Vocabulary)
 		GetTotal(topicId int64) (int, error)
 	}

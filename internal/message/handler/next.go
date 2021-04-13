@@ -12,6 +12,7 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/text/message"
 	"strconv"
+	"time"
 )
 
 type (
@@ -76,7 +77,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		return h.api.SendMessageWithButton(peerId, fmt.Sprintf(`сегодня вы повторили все слова этой темы (%s), приходите к нам завтра`, tasksPerDayLang), keyboard)
 	}
 
-	if vocabulary, err = h.vocabularyRepository.FindActual(topicId, int64(peerId)); err != nil {
+	if vocabulary, err = h.getActualVocabulary(topicId, int64(peerId)); err != nil {
 		h.log.Debugf(`could not fetch next word: %s`, err)
 
 		keyboard.Buttons = button2.ReturnWithProgress(fmt.Sprintf(`%d`, topicId))
@@ -94,4 +95,30 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 	question = fmt.Sprintf(`(%d / %d). "%s"`, tasksPerDay+1, totalVocabularyItems, vocabulary.Question)
 
 	return h.api.SendMessageWithAttachmentAndButton(peerId, question, vocabulary.Attachment, keyboard)
+}
+
+func (h *nextHandler) getActualVocabulary(topicId int64, peerId int64) (vocabulary domain2.Vocabulary, err error) {
+	var (
+		longTime  = time.Now().Add(-time.Hour * 24 * 7)
+		shortTime = time.Now()
+	)
+
+	if vocabulary, err = h.vocabularyRepository.FindActual(topicId, peerId, longTime); err != nil {
+		if err.(errors.FocalismError).Is(errors.NoRowsDatabaseError) {
+			if vocabulary, err = h.vocabularyRepository.FindActual(topicId, peerId, shortTime); err != nil {
+				h.log.Debugf(`could not fetch next word: %s`, err)
+			}
+		} else {
+			h.
+				log.
+				With(
+					zap.Error(err),
+					zap.Int64(`topic_id`, topicId),
+					zap.Int64(`peer_id`, peerId),
+				).
+				Error(`get actual vocabulary error`)
+		}
+	}
+
+	return vocabulary, err
 }

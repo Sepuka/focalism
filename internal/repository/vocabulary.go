@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/go-pg/pg"
 	"github.com/go-pg/pg/orm"
+	"github.com/sepuka/focalism/errors"
 	"github.com/sepuka/focalism/internal/domain"
 	"time"
 )
@@ -17,7 +18,7 @@ func NewVocabularyRepository(db *pg.DB) domain.VocabularyRepository {
 	return &VocabularyRepository{db: db}
 }
 
-func (v *VocabularyRepository) FindActual(topicId int64, peerId int64) (domain.Vocabulary, error) {
+func (v *VocabularyRepository) FindActual(topicId int64, peerId int64, date time.Time) (domain.Vocabulary, error) {
 	var (
 		err        error
 		vocabulary = domain.Vocabulary{}
@@ -28,7 +29,7 @@ func (v *VocabularyRepository) FindActual(topicId int64, peerId int64) (domain.V
 		db.
 		Model((*domain.Task)(nil)).
 		ColumnExpr(`vocabulary_id`).
-		Where(`DATE(task.datetime) = ? AND peer_id = ? AND is_correct = true`, time.Now().Format(`2006-01-02`), peerId)
+		Where(`DATE(task.datetime) >= ? AND peer_id = ? AND is_correct = true`, date.Format(`2006-01-02`), peerId)
 
 	err = v.
 		db.
@@ -36,6 +37,10 @@ func (v *VocabularyRepository) FindActual(topicId int64, peerId int64) (domain.V
 		Where(`topic_id = ? AND vocabulary_id NOT IN (?)`, topicId, subQuery).
 		Limit(1).
 		Select()
+
+	if err == pg.ErrNoRows {
+		return vocabulary, errors.NewDatabaseNoRowsError(`There were not any vocabularies found`, err)
+	}
 
 	return vocabulary, err
 }

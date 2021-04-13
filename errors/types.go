@@ -3,10 +3,11 @@ package errors
 import "errors"
 
 var (
-	NoError       = errors.New(`not an error`)
-	InvalidJson   = errors.New(`invalid JSON`)
-	DatabaseError = errors.New(`database error`)
-	InternalError = errors.New(`internal error`)
+	NoError             = errors.New(`not an error`)
+	InvalidJson         = errors.New(`invalid JSON`)
+	DatabaseError       = errors.New(`database error`)
+	NoRowsDatabaseError = errors.New(`empty query result`)
+	InternalError       = errors.New(`internal error`)
 )
 
 func NewInvalidJsonError(msg string, originalErr error) FocalismError {
@@ -27,7 +28,7 @@ func NewDatabaseError(msg string, originalErr error) FocalismError {
 
 func NewDatabaseNoRowsError(msg string, originalErr error) FocalismError {
 	return FocalismError{
-		err:           NoError,
+		err:           NoRowsDatabaseError,
 		message:       msg,
 		originalError: originalErr,
 	}
