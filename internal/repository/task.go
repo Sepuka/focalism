@@ -144,3 +144,15 @@ func (v *TaskRepository) GetProgress(topicId int64, peerId int64) (success int, 
 
 	return success, total, err
 }
+
+func (v *TaskRepository) DeleteLast(peerId int64) error {
+	var err error
+
+	_, err = v.
+		db.
+		Model((*domain.Task)(nil)).
+		Where(`peer_id = ? AND time IS NULL`, peerId).
+		Delete()
+
+	return err
+}

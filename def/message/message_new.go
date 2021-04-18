@@ -42,7 +42,7 @@ func init() {
 						button.StartIdButton:     handler.NewStartHandler(api),
 						button.NextIdButton:      nextHandler,
 						button.SurrenderIdButton: handler.NewSurrenderHandler(api, taskRepo, logger),
-						button.ReturnIdButton:    handler.NewReturnHandler(api),
+						button.ReturnIdButton:    handler.NewReturnHandler(api, taskRepo, logger),
 						button.TopicsIdButton:    handler.NewTopicHandler(api, topicRepo),
 						button.IrregularIdButton: handler.NewIrregularHandler(nextHandler),
 						button.ProgressIdButton:  handler.NewProgressHandler(api, progressRepo, vocabularyRepo),

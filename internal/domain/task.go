@@ -12,6 +12,7 @@ type (
 		GetLast(peerId int64) (Task, error)
 		Answer(task Task) error
 		GetTodayTasks(topicId int64, peerId int) (int, error)
+		DeleteLast(peerId int64) error
 	}
 
 	TaskProgressRepository interface {
