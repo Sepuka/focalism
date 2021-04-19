@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"github.com/fat0troll/durufmt"
+	"github.com/sepuka/durufmt"
 	"github.com/sepuka/focalism/errors"
 	domain2 "github.com/sepuka/focalism/internal/domain"
 	"github.com/sepuka/focalism/internal/lang"
@@ -78,7 +78,7 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		return errors.NewDatabaseError(`could not calculate the average time`, err)
 	}
 
-	duration = durufmt.Parse(time.Duration(taskProgress.TotalAverage) * time.Second).String()
+	duration = durufmt.Parse(time.Duration(taskProgress.TotalAverage) * time.Second).SetAccusativeCase().String()
 	successAttemptsText := printer.Sprintf(lang.KeyLangTasksPerDay, success)
 	totalAttemptsText := printer.Sprintf(lang.KeyLangTotalAttempts, taskProgress.TotalAttempts)
 
