@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"github.com/fat0troll/durufmt"
 	"github.com/sepuka/focalism/errors"
 	domain2 "github.com/sepuka/focalism/internal/domain"
 	"github.com/sepuka/focalism/internal/lang"
@@ -11,6 +12,7 @@ import (
 	"github.com/sepuka/vkbotserver/domain"
 	"golang.org/x/text/message"
 	"strconv"
+	"time"
 )
 
 type (
@@ -39,7 +41,9 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		topicId                  int64
 		peerId                   = int64(req.Object.Message.FromId)
 		success, attempts, total int
-		msgTmpl                  = `сегодня вы уже верно назвали %s из %d попыток`
+		taskProgress             domain2.TaskProgress
+		duration                 string
+		msgTmpl                  = `сегодня вы уже верно назвали %s из %d попыток, общее среднее время ответа %s, всего попыток %d`
 		keyboard                 = button.Keyboard{
 			OneTime: true,
 		}
@@ -70,7 +74,12 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		keyboard.Buttons = button2.NextWithReturn(fmt.Sprintf(`%d`, topicId))
 	}
 
+	if taskProgress, err = h.taskRepository.GetAverage(peerId); err != nil {
+		return errors.NewDatabaseError(`could not calculate the average time`, err)
+	}
+
+	duration = durufmt.Parse(time.Duration(taskProgress.TotalAverage) * time.Second).String()
 	successAttempts := printer.Sprintf(lang.KeyLangTasksPerDay, success)
 
-	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, successAttempts, attempts), keyboard)
+	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, successAttempts, attempts, duration, taskProgress.TotalAttempts), keyboard)
 }

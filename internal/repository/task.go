@@ -145,6 +145,23 @@ func (v *TaskRepository) GetProgress(topicId int64, peerId int64) (success int, 
 	return success, total, err
 }
 
+func (v *TaskRepository) GetAverage(peerId int64) (domain.TaskProgress, error) {
+	var (
+		err    error
+		result domain.TaskProgress
+	)
+
+	err = v.
+		db.
+		Model((*domain.Task)(nil)).
+		ColumnExpr(`avg(time) AS total_average`).
+		ColumnExpr(`count(*) AS total_attempts`).
+		Where(`peer_id = ? AND time IS NOT NULL`, peerId).
+		Select(&result)
+
+	return result, err
+}
+
 func (v *TaskRepository) DeleteLast(peerId int64) error {
 	var err error
 

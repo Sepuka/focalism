@@ -17,6 +17,7 @@ type (
 
 	TaskProgressRepository interface {
 		GetProgress(topicId int64, peerId int64) (success int, attempts int, err error)
+		GetAverage(peerId int64) (TaskProgress, error)
 	}
 
 	Comparator interface {
@@ -31,6 +32,11 @@ type (
 		Time         int64       `sql:"time"`
 		Vocabulary   *Vocabulary `pg:"rel:belongs-to"`
 		IsCorrect    bool        `sql:"is_correct"`
+	}
+
+	TaskProgress struct {
+		TotalAverage  float32
+		TotalAttempts int
 	}
 )
 
