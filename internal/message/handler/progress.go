@@ -43,7 +43,7 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 		success, attempts, total int
 		taskProgress             domain2.TaskProgress
 		duration                 string
-		msgTmpl                  = `сегодня вы уже верно назвали %s из %d попыток, общее среднее время ответа %s, всего попыток %d`
+		msgTmpl                  = `сегодня вы уже верно назвали %s из %d попыток, а всего вы совершили %s, раздумывая над ответом в среднем по %s`
 		keyboard                 = button.Keyboard{
 			OneTime: true,
 		}
@@ -79,7 +79,8 @@ func (h *progressHandler) Handle(req *domain.Request, payload *button.Payload) e
 	}
 
 	duration = durufmt.Parse(time.Duration(taskProgress.TotalAverage) * time.Second).String()
-	successAttempts := printer.Sprintf(lang.KeyLangTasksPerDay, success)
+	successAttemptsText := printer.Sprintf(lang.KeyLangTasksPerDay, success)
+	totalAttemptsText := printer.Sprintf(lang.KeyLangTotalAttempts, taskProgress.TotalAttempts)
 
-	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, successAttempts, attempts, duration, taskProgress.TotalAttempts), keyboard)
+	return h.api.SendMessageWithButton(int(peerId), fmt.Sprintf(msgTmpl, successAttemptsText, attempts, totalAttemptsText, duration), keyboard)
 }

@@ -32,6 +32,15 @@ func init() {
 					return nil, err
 				}
 
+				if err = message2.Set(language.Russian, lang.KeyLangTotalAttempts, plural.Selectf(1, `%d`,
+					plural.One, `%d попытку`,
+					plural.Few, `%d попытки`,
+					plural.Many, `%d попыток`,
+					plural.Other, `%d попыток`,
+				)); err != nil {
+					return nil, err
+				}
+
 				return nil, err
 
 			},
