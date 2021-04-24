@@ -50,7 +50,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		topicId                           int64
 		tasksPerDay, totalVocabularyItems int
 		tasksPerDayLang                   string
-		question                          string
+		question, questionTmpl            string
 		printer                           *message.Printer
 	)
 
@@ -92,7 +92,8 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 	}
 
 	keyboard.Buttons = button2.SurrenderAndReturn(task.GetId())
-	question = fmt.Sprintf(`(%d / %d). "%s"`, tasksPerDay+1, totalVocabularyItems, vocabulary.Question)
+	questionTmpl = vocabulary.Topic.Tmpl
+	question = fmt.Sprintf(questionTmpl, tasksPerDay+1, totalVocabularyItems, vocabulary.Question)
 
 	return h.api.SendMessageWithAttachmentAndButton(peerId, question, vocabulary.Attachment, keyboard)
 }

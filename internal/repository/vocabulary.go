@@ -34,7 +34,8 @@ func (v *VocabularyRepository) FindActual(topicId int64, peerId int64, date time
 	err = v.
 		db.
 		Model(&vocabulary).
-		Where(`topic_id = ? AND vocabulary_id NOT IN (?)`, topicId, subQuery).
+		Relation(`Topic`).
+		Where(`vocabulary.topic_id = ? AND vocabulary_id NOT IN (?)`, topicId, subQuery).
 		Limit(1).
 		Select()
 

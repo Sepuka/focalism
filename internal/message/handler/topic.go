@@ -17,6 +17,7 @@ type (
 	}
 )
 
+// Topic handler constructor
 func NewTopicHandler(
 	api *api.Api,
 	topicRepo domain2.TopicRepository,
