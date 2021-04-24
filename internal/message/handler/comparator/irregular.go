@@ -28,6 +28,7 @@ func (c *irregularComparator) Compare(vocabulary *domain.Vocabulary, msg string)
 	var (
 		answer           = strings.ToLower(vocabulary.Answer)
 		expected, actual []string
+		index            = 0
 	)
 
 	expected = regexp.MustCompile(regexpPattern).Split(answer, maxWords)
@@ -37,7 +38,7 @@ func (c *irregularComparator) Compare(vocabulary *domain.Vocabulary, msg string)
 		return false
 	}
 
-	for index, word := range expected {
+	for _, word := range expected {
 		if actual[index] == `` {
 			continue
 		}
@@ -45,6 +46,8 @@ func (c *irregularComparator) Compare(vocabulary *domain.Vocabulary, msg string)
 		if strings.Trim(actual[index], ` `) != word {
 			return false
 		}
+
+		index++
 	}
 
 	return true
