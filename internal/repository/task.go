@@ -85,15 +85,19 @@ func (v *TaskRepository) GetLast(peerId int64) (domain.Task, error) {
 
 func (v *TaskRepository) Answer(task domain.Task) error {
 	var (
-		err error
+		err   error
+		query = v.db.Model(&task)
 	)
 
 	task.Time = int64(time.Now().Sub(task.Datetime).Seconds())
 
-	_, err = v.
-		db.
-		Model(&task).
-		Column(`time`, `is_correct`).
+	if task.IsCorrect {
+		query.Column(`time`, `is_correct`)
+	} else {
+		query.Column(`time`)
+	}
+
+	_, err = query.
 		WherePK().
 		Update()
 
