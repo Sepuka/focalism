@@ -1,6 +1,10 @@
 package button
 
-import "github.com/sepuka/vkbotserver/api/button"
+import (
+	"fmt"
+	domain2 "github.com/sepuka/focalism/internal/domain"
+	"github.com/sepuka/vkbotserver/api/button"
+)
 
 const (
 	StartIdButton     = `start`
@@ -178,5 +182,65 @@ func NextWithReturnAndProgress(topicId string) [][]button.Button {
 			},
 			progress(topicId),
 		},
+	}
+}
+
+func ReturnWithTopicCouples(topics []domain2.Topic) [][]button.Button {
+	var (
+		topic        domain2.Topic
+		returnButton = Return()
+	)
+
+	switch len(topics) {
+	case 0:
+		return Return()
+	case 1:
+		var topicButton = button.Button{
+			Color: button.PrimaryColor,
+			Action: button.Action{
+				Type:  TextButtonType,
+				Label: button.Text(topic.Title),
+				Payload: button.Payload{
+					Command: NextIdButton,
+					Id:      fmt.Sprintf(`%d`, topic.TopicId),
+				}.String(),
+			},
+		}
+		returnButton[0] = append(returnButton[0], topicButton)
+
+		return returnButton
+	default:
+		var (
+			topicId     int
+			buttons     = returnButton
+			topicButton button.Button
+			rowButton   []button.Button
+		)
+
+		for topicId, topic = range topics {
+			topicButton = button.Button{
+				Color: button.PrimaryColor,
+				Action: button.Action{
+					Type:  TextButtonType,
+					Label: button.Text(topic.Title),
+					Payload: button.Payload{
+						Command: NextIdButton,
+						Id:      fmt.Sprintf(`%d`, topic.TopicId),
+					}.String(),
+				},
+			}
+			rowButton = append(rowButton, topicButton)
+
+			if topicId%2 != 0 {
+				buttons = append(buttons, rowButton)
+				rowButton = nil
+			}
+		}
+
+		if len(rowButton) > 0 {
+			buttons = append(buttons, rowButton)
+		}
+
+		return buttons
 	}
 }
