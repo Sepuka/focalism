@@ -15,3 +15,6 @@ dependencies:
 
 tests:
 	go test ./...
+
+mocks:
+	mockery -all -dir internal/domain -output internal/repository/mocks

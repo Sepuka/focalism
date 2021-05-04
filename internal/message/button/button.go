@@ -14,6 +14,7 @@ const (
 	IrregularIdButton = `irregular`
 	TopicsIdButton    = `topics`
 	ProgressIdButton  = `progress`
+	TipIdButton       = `tip`
 
 	TextButtonType      button.Type = `text`
 	NextLabel           button.Text = `ещё слово`
@@ -22,6 +23,7 @@ const (
 	IrregularVerbsLabel button.Text = `неправильные глаголы`
 	TopicsLabel         button.Text = `темы`
 	ProgressLabel       button.Text = `прогресс`
+	TipLabel            button.Text = `подсказка`
 )
 
 func progress(topicId string) button.Button {
@@ -48,6 +50,45 @@ func SurrenderAndReturn(taskId string) [][]button.Button {
 					Label: GetAnswerLabel,
 					Payload: button.Payload{
 						Command: SurrenderIdButton,
+						Id:      taskId,
+					}.String(),
+				},
+			},
+			{
+				Color: button.SecondaryColor,
+				Action: button.Action{
+					Type:  TextButtonType,
+					Label: ReturnLabel,
+					Payload: button.Payload{
+						Command: ReturnIdButton,
+					}.String(),
+				},
+			},
+		},
+	}
+}
+
+func SurrenderAndReturnWithTip(taskId string) [][]button.Button {
+	return [][]button.Button{
+		{
+			{
+				Color: button.PrimaryColor,
+				Action: button.Action{
+					Type:  TextButtonType,
+					Label: GetAnswerLabel,
+					Payload: button.Payload{
+						Command: SurrenderIdButton,
+						Id:      taskId,
+					}.String(),
+				},
+			},
+			{
+				Color: button.SecondaryColor,
+				Action: button.Action{
+					Type:  TextButtonType,
+					Label: TipLabel,
+					Payload: button.Payload{
+						Command: TipIdButton,
 						Id:      taskId,
 					}.String(),
 				},
