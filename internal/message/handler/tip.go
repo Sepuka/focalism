@@ -5,11 +5,11 @@ import (
 	"github.com/sepuka/focalism/errors"
 	domain2 "github.com/sepuka/focalism/internal/domain"
 	button2 "github.com/sepuka/focalism/internal/message/button"
+	"github.com/sepuka/focalism/internal/message/handler/masker"
 	"github.com/sepuka/vkbotserver/api"
 	"github.com/sepuka/vkbotserver/api/button"
 	"github.com/sepuka/vkbotserver/domain"
 	"strconv"
-	"strings"
 )
 
 type (
@@ -55,20 +55,15 @@ func (h *tipHandler) Handle(req *domain.Request, payload *button.Payload) error 
 
 func (h *tipHandler) tip(task domain2.Task) string {
 	var (
-		length = len(task.Vocabulary.Answer)
-		answer string
+		maskFormatter domain2.Masker
 	)
 
-	if length > 2 {
-		stars := strings.Repeat(`*`, length-2)
-		answer = fmt.Sprintf(`"%c%s%c"`, task.Vocabulary.Answer[0], stars, task.Vocabulary.Answer[length-1])
-	} else {
-		answer = fmt.Sprintf(`"%c**"`, task.Vocabulary.Answer[0])
+	switch task.Vocabulary.Topic.Mode.Marker {
+	case string(domain2.IrregularMode):
+		maskFormatter = masker.NewIrregularMasker()
+	default:
+		maskFormatter = masker.NewSimpleMasker()
 	}
 
-	if len(task.Vocabulary.Example) > 0 {
-		answer = fmt.Sprintf("%s\n\n%s", answer, task.Vocabulary.Example)
-	}
-
-	return fmt.Sprintf(`%s`, answer)
+	return maskFormatter.Mask(task.Vocabulary)
 }

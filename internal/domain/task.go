@@ -24,6 +24,10 @@ type (
 		Compare(vocabulary *Vocabulary, msg string) bool
 	}
 
+	Masker interface {
+		Mask(vocabulary *Vocabulary) string
+	}
+
 	Task struct {
 		Id           int64       `sql:"task_id,pk"`
 		VocabularyId int64       `sql:"vocabulary_id"`

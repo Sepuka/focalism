@@ -120,6 +120,10 @@ func TestNewTipHandler_Handle(t *testing.T) {
 			Vocabulary: &domain2.Vocabulary{
 				Answer:  caseValue.answer,
 				Example: caseValue.example,
+				Topic: &domain2.Topic{
+					Mode: &domain2.Mode{
+					},
+				},
 			},
 		}, nil)
 

@@ -48,6 +48,8 @@ func (v *TaskRepository) GetById(taskId int64) (domain.Task, error) {
 		Model(&task).
 		Column(`task.*`).
 		Relation(`Vocabulary`).
+		Relation(`Vocabulary.Topic`).
+		Relation(`Vocabulary.Topic.Mode`).
 		WherePK().
 		Select()
 
