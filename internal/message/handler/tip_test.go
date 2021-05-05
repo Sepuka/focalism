@@ -70,7 +70,7 @@ func TestNewTipHandler_Handle(t *testing.T) {
 					},
 				},
 				answer: `Answer1`,
-				tip:    `A***`,
+				tip:    `"A*****1"`,
 				taskId: 0,
 			},
 			`answer with example`: {
@@ -86,7 +86,7 @@ func TestNewTipHandler_Handle(t *testing.T) {
 					},
 				},
 				answer:  `Answer2`,
-				tip:     `A***`,
+				tip:     `"A*****2"`,
 				taskId:  1,
 				example: `There is some example`,
 			},
@@ -104,7 +104,7 @@ func TestNewTipHandler_Handle(t *testing.T) {
 		payload.Keyboard = string(keyboard)
 		payload.Message = caseValue.tip
 		if caseValue.example != `` {
-			payload.Message = fmt.Sprintf("%s\n%s", payload.Message, caseValue.example)
+			payload.Message = fmt.Sprintf("%s\n\n%s", payload.Message, caseValue.example)
 		}
 		params, _ := query.Values(payload)
 		httpRequest, _ = http.NewRequest(`POST`, fmt.Sprintf(`%s?%s`, endpoint, params.Encode()), nil)
