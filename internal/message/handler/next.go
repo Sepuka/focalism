@@ -91,11 +91,7 @@ func (h *nextHandler) Handle(req *domain.Request, payload *button.Payload) error
 		return errors.NewDatabaseError(`could not create new task`, err)
 	}
 
-	if peerId == 557404793 {
-		keyboard.Buttons = button2.SurrenderAndReturnWithTip(task.GetId())
-	} else {
-		keyboard.Buttons = button2.SurrenderAndReturn(task.GetId())
-	}
+	keyboard.Buttons = button2.SurrenderAndReturnWithTip(task.GetId())
 	questionTmpl = vocabulary.Topic.Tmpl
 	question = fmt.Sprintf(questionTmpl, tasksPerDay+1, totalVocabularyItems, vocabulary.Question)
 
