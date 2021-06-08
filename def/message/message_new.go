@@ -35,7 +35,8 @@ func init() {
 					logger         = ctx.Get(log.LoggerDef).(*zap.SugaredLogger)
 					vocabularyRepo = ctx.Get(repository.VocabularyRepoDef).(domain.VocabularyRepository)
 					taskRepo       = ctx.Get(repository.TaskRepoDef).(domain.TaskRepository)
-					progressRepo   = ctx.Get(repository.TaskRepoDef).(domain.TaskProgressRepository)
+					reportsRepo    = ctx.Get(repository.TaskRepoDef).(domain.TaskReportsRepository)
+					progressRepo   = ctx.Get(repository.ProgressRepoDef).(domain.ProgressRepository)
 					topicRepo      = ctx.Get(repository.TopicRepoDef).(domain.TopicRepository)
 					nextHandler    = handler.NewNextHandler(api, vocabularyRepo, taskRepo, logger)
 					handlers       = map[string]handler.MessageHandler{
@@ -45,10 +46,10 @@ func init() {
 						button.ReturnIdButton:    handler.NewReturnHandler(api, taskRepo, logger),
 						button.TopicsIdButton:    handler.NewTopicHandler(api, topicRepo),
 						button.IrregularIdButton: handler.NewIrregularHandler(nextHandler),
-						button.ProgressIdButton:  handler.NewProgressHandler(api, progressRepo, vocabularyRepo),
+						button.ProgressIdButton:  handler.NewProgressHandler(api, reportsRepo, vocabularyRepo),
 						button.TipIdButton:       handler.NewTipHandler(api, taskRepo),
 					}
-					answerHandler = handler.NewAnswer(taskRepo, api, logger)
+					answerHandler = handler.NewAnswer(taskRepo, progressRepo, api, logger)
 				)
 
 				return message2.NewMessageNew(cfg, handlers, logger, answerHandler), nil

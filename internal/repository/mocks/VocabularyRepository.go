@@ -15,7 +15,7 @@ type VocabularyRepository struct {
 }
 
 // FindActual provides a mock function with given fields: topicId, peerId, date
-func (_m VocabularyRepository) FindActual(topicId int64, peerId int64, date time.Time) (domain.Vocabulary, error) {
+func (_m *VocabularyRepository) FindActual(topicId int64, peerId int64, date time.Time) (domain.Vocabulary, error) {
 	ret := _m.Called(topicId, peerId, date)
 
 	var r0 domain.Vocabulary
@@ -36,7 +36,7 @@ func (_m VocabularyRepository) FindActual(topicId int64, peerId int64, date time
 }
 
 // GetTotal provides a mock function with given fields: topicId
-func (_m VocabularyRepository) GetTotal(topicId int64) (int, error) {
+func (_m *VocabularyRepository) GetTotal(topicId int64) (int, error) {
 	ret := _m.Called(topicId)
 
 	var r0 int
@@ -57,6 +57,6 @@ func (_m VocabularyRepository) GetTotal(topicId int64) (int, error) {
 }
 
 // IncrViews provides a mock function with given fields: _a0
-func (_m VocabularyRepository) IncrViews(_a0 domain.Vocabulary) {
+func (_m *VocabularyRepository) IncrViews(_a0 domain.Vocabulary) {
 	_m.Called(_a0)
 }

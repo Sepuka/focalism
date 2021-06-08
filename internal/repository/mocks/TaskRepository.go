@@ -84,15 +84,17 @@ func (_m TaskRepository) GetById(taskId int64) (domain.Task, error) {
 	return r0, r1
 }
 
-// GetLast provides a mock function with given fields: peerId
-func (_m TaskRepository) GetLast(peerId int64) (domain.Task, error) {
+// GetLastUnanswered provides a mock function with given fields: peerId
+func (_m TaskRepository) GetLastUnanswered(peerId int64) (*domain.Task, error) {
 	ret := _m.Called(peerId)
 
-	var r0 domain.Task
-	if rf, ok := ret.Get(0).(func(int64) domain.Task); ok {
+	var r0 *domain.Task
+	if rf, ok := ret.Get(0).(func(int64) *domain.Task); ok {
 		r0 = rf(peerId)
 	} else {
-		r0 = ret.Get(0).(domain.Task)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.Task)
+		}
 	}
 
 	var r1 error

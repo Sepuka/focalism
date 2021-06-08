@@ -9,13 +9,13 @@ type (
 	TaskRepository interface {
 		Create(vocabulary Vocabulary, peerId int64) (*Task, error)
 		GetById(taskId int64) (Task, error)
-		GetLast(peerId int64) (Task, error)
-		Answer(task Task) error
+		GetLastUnanswered(peerId int64) (*Task, error)
+		Answer(task *Task) error
 		GetTodayTasks(topicId int64, peerId int) (int, error)
 		DeleteLast(peerId int64) error
 	}
 
-	TaskProgressRepository interface {
+	TaskReportsRepository interface {
 		GetProgress(topicId int64, peerId int64) (success int, attempts int, err error)
 		GetAverage(peerId int64) (TaskProgress, error)
 	}

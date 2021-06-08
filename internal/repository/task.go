@@ -60,10 +60,10 @@ func (v *TaskRepository) GetById(taskId int64) (domain.Task, error) {
 	return task, err
 }
 
-func (v *TaskRepository) GetLast(peerId int64) (domain.Task, error) {
+func (v *TaskRepository) GetLastUnanswered(peerId int64) (*domain.Task, error) {
 	var (
 		err  error
-		task = domain.Task{}
+		task = &domain.Task{}
 	)
 
 	err = v.
@@ -85,7 +85,7 @@ func (v *TaskRepository) GetLast(peerId int64) (domain.Task, error) {
 	return task, err
 }
 
-func (v *TaskRepository) Answer(task domain.Task) error {
+func (v *TaskRepository) Answer(task *domain.Task) error {
 	var (
 		err   error
 		query = v.db.Model(&task)

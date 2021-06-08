@@ -18,14 +18,14 @@ import (
 type (
 	progressHandler struct {
 		api            *api.Api
-		taskRepository domain2.TaskProgressRepository
+		taskRepository domain2.TaskReportsRepository
 		vocabularyRepo domain2.VocabularyRepository
 	}
 )
 
 func NewProgressHandler(
 	api *api.Api,
-	taskRepo domain2.TaskProgressRepository,
+	taskRepo domain2.TaskReportsRepository,
 	vocabularyRepo domain2.VocabularyRepository,
 ) *progressHandler {
 	return &progressHandler{
